@@ -1,0 +1,41 @@
+1. 作用域
+    当前上下文环境中哪些数据可被访问，描述这个事情的是作用域。函数的作用域是指函数是否对某个变量有执行或操作的权限。
+    
+    作用域分为两种： local、global。
+
+
+2. Execution Context
+    当一个函数被调用时，一个对应的Execution Context会被创建，并置于Execution Stack的顶部。
+    
+    Execution Context包含一些属性：
+    a. 参数（parameters）
+    b. 定义的变量（declared variables）
+    c. 定义的函数（declared functions）
+    
+    同时，当前的“this”是指对此Execution Context的引用。
+
+    Execution Context同作用域一样也分为两种：global、function。
+
+    浏览器标签关闭前，Global Execution Context会一直存在(running)，当一个函数被调用时，Function Execution Context会被置于栈顶(stack it)，当函数调用结束，对应的Function Execution Context会从栈顶弹出，即结束了它的生命周期。
+    as we all know, JavaScript是个单线程语言（参见：https://github.com/JChehe/blog/blob/master/posts/%E5%85%B3%E4%BA%8EJavaScript%E5%8D%95%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BA%8B.md），当一个函数被调用时，
+    函数对应的Execution Context会被置于栈顶，更早的函数对应的Execution Context会处于暂停状态（Execution Context作为上下文，被切换到时处于running，切换走待执行时处于paused），当执行完之后，对应的Execution Context被从栈顶移出，
+    而活动的Execution Context切换到上面所述被暂停的函数对应的Execution Context上。
+
+3. Scope Chain
+    Scope Chain的作用是链接或提供Execution Context对变量和函数的访问的方式。 
+    
+    函数被调用时会往Scope Chain上添加一个作用域数据，Scope Chain上有两种东西：Activation Object和Variable Object。Activation Object有它自己的定义的 变量、参数、this。
+
+    lambda表达式定义的函数其实是作为一个变量对待的，和用function定义的函数有所区别。
+
+    在非strict mode下，当一个变量前面没有var、let、const等修饰符显示定义并被赋值（赋值式定义）并且未在Scope Chain上的任何作用域内定义，则这个变量会被提升为全局作用域（Global Scope）内，见Sample 2 。 在运行时，发现一个变量后会顺着作用域链进行查找，如果层层查找只到Global Scope依然没有找到，则报引用错误Reference Error。
+    这也是为什么函数内部定义的变量会在函数内优先级高于外部定义的同名变量的原因，因为在Innermost Scope中查找到之后就不会再顺着Scope Chain继续查找。见Sample2 。
+
+    Global Scope对应的是Window Object。在控制台输入window就可以看到Global Scope内的所有变量或函数。
+
+4.  Immediately Invoked Function Expression (IIFE)
+    立即执行函数与模块化，什么时候需要立即执行函数
+
+5. Closures闭包
+    结合Scope Chain理解闭包大有裨益。
+
